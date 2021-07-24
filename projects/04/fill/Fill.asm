@@ -12,3 +12,48 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+@24576 // SCREEN + 256 * 32; 256 rows physical, each row is 32 consecutive 16-bit words 
+D=A
+@end_row
+M=D
+
+(LOOP)
+    @SCREEN
+    D=A
+    @current_row
+    M=D
+
+    @color
+    M=0
+
+    @KBD
+    D=M
+    @PRESSED
+    D;JNE
+    @UPDATE_SCREEN
+    0;JMP
+
+(PRESSED)
+    @color
+    M=-1
+
+(UPDATE_SCREEN)
+    @current_row
+    D=M
+    @end_row
+    D=M-D
+
+    @LOOP
+    D;JEQ
+
+    @color
+    D=M
+    @current_row
+    A=M
+    M=D
+    @current_row
+    M=M+1
+
+    @UPDATE_SCREEN
+    0;JMP
